@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi Level ATC – Start</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6f8;
+      color: #1f2937;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+      background: white;
+      padding: 40px;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      margin-top: 0;
+      color: #4b5563;
+      font-weight: normal;
+      margin-bottom: 30px;
+    }
+
+    p {
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 1rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .button-row {
+      margin-top: 30px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 22px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .hint {
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-top: 8px;
+    }
+
+    .error {
+      color: #b91c1c;
+      font-size: 0.95rem;
+      margin-top: 12px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Auswirkungsanalyse von Multi Level ATC</h1>
+    <h2>Startseite der Untersuchung</h2>
+
+    <p>
+      In dieser Untersuchung werden Entscheidungssituationen aus dem ATC-Kontext gezeigt.
+      Bitte beantworten Sie zunächst die folgenden Angaben und starten Sie danach den Versuch.
+    </p>
+
+    <form id="startForm">
+      <div class="form-group">
+        <label for="age">Alter</label>
+        <input
+          type="number"
+          id="age"
+          name="age"
+          min="16"
+          max="100"
+          required
+          placeholder="Bitte Alter eingeben"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="experience">ATC-Vorerfahrung</label>
+        <select id="experience" name="experience" required>
+          <option value="">Bitte auswählen</option>
+          <option value="keine">Keine</option>
+          <option value="ausbildung">Ausbildung / Studium / Training</option>
+          <option value="unter_2">Operative Erfahrung unter 2 Jahren</option>
+          <option value="2_bis_5">Operative Erfahrung 2–5 Jahre</option>
+          <option value="ueber_5">Operative Erfahrung über 5 Jahre</option>
+        </select>
+        <div class="hint">
+          Falls du es später feiner willst, kannst du hier statt Kategorien auch konkrete Jahre abfragen.
+        </div>
+      </div>
+
+      <div id="errorMessage" class="error">
+        Bitte fülle beide Felder aus.
+      </div>
+
+      <div class="button-row">
+        <button type="submit">Weiter</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const startForm = document.getElementById("startForm");
+    const errorMessage = document.getElementById("errorMessage");
+
+    startForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const age = document.getElementById("age").value.trim();
+      const experience = document.getElementById("experience").value;
+
+      if (!age || !experience) {
+        errorMessage.style.display = "block";
+        return;
+      }
+
+      errorMessage.style.display = "none";
+
+      // Für den Prototypen lokal im Browser speichern
+      sessionStorage.setItem("participant_age", age);
+      sessionStorage.setItem("participant_atc_experience", experience);
+
+      // Nächste Seite
+      window.location.href = "instructions.html";
+    });
+  </script>
+</body>
+</html>
