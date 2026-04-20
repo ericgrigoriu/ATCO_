@@ -184,10 +184,7 @@
 
     <div class="top-bar">
       <div class="status-box" id="trialCounter">Situation 1 von 6</div>
-      <div class="status-box" id="conditionLabel">Bedingung A</div>
     </div>
-
-    <div class="assistant-box" id="assistantBox"></div>
 
     <div class="stimulus-box">
       <img id="stimulusImage" src="" alt="ATC-Situation" />
@@ -233,44 +230,14 @@
   </div>
 
   <script>
-    const scenarios = [
-      {
-        id: 1,
-        image: "stimuli/Bild2.png",
-        condition: "A",
-        assistantRecommendation: ""
-      },
-      {
-        id: 2,
-        image: "stimuli/Bild3.png",
-        condition: "B",
-        assistantRecommendation: "Konflikt"
-      },
-      {
-        id: 3,
-        image: "stimuli/Bild4.png",
-        condition: "A",
-        assistantRecommendation: ""
-      },
-      {
-        id: 4,
-        image: "stimuli/Bild5.png",
-        condition: "B",
-        assistantRecommendation: "Kein Konflikt"
-      },
-      {
-        id: 5,
-        image: "stimuli/Bild6.png",
-        condition: "A",
-        assistantRecommendation: ""
-      },
-      {
-        id: 6,
-        image: "stimuli/Bild7.png",
-        condition: "B",
-        assistantRecommendation: "Konflikt"
-      }
-    ];
+   const scenarios = [
+  { id: 1, image: "Stimuli/Bild2.png" },
+  { id: 2, image: "Stimuli/Bild3.png" },
+  { id: 3, image: "Stimuli/Bild4.png" },
+  { id: 4, image: "Stimuli/Bild5.png" },
+  { id: 5, image: "Stimuli/Bild6.png" },
+  { id: 6, image: "Stimuli/Bild7.png" }
+];
 
     let currentIndex = 0;
     let selectedAnswer = null;
@@ -279,8 +246,6 @@
 
     const stimulusImage = document.getElementById("stimulusImage");
     const trialCounter = document.getElementById("trialCounter");
-    const conditionLabel = document.getElementById("conditionLabel");
-    const assistantBox = document.getElementById("assistantBox");
     const btnConflict = document.getElementById("btnConflict");
     const btnNoConflict = document.getElementById("btnNoConflict");
     const detailsBox = document.getElementById("detailsBox");
@@ -302,7 +267,6 @@
       instruction.value = "";
 
       trialCounter.textContent = `Situation ${currentIndex + 1} von ${scenarios.length}`;
-      conditionLabel.textContent = `Bedingung ${scenario.condition}`;
 
       stimulusImage.onload = () => {
         startTime = performance.now();
@@ -310,13 +274,6 @@
 
       stimulusImage.src = scenario.image;
 
-      if (scenario.condition === "B") {
-        assistantBox.style.display = "block";
-        assistantBox.textContent = `Hinweis des digitalen Systems: ${scenario.assistantRecommendation}`;
-      } else {
-        assistantBox.style.display = "none";
-        assistantBox.textContent = "";
-      }
     }
 
     btnConflict.addEventListener("click", () => {
@@ -362,8 +319,6 @@
       const trialResult = {
         scenarioId: scenario.id,
         image: scenario.image,
-        condition: scenario.condition,
-        assistantRecommendation: scenario.assistantRecommendation,
         answer: selectedAnswer,
         callsign: selectedAnswer === "conflict" ? callsign.value.trim() : "",
         instruction: selectedAnswer === "conflict" ? instruction.value : "",
