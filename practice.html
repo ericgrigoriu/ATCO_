@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi Level ATC – Übungsdurchgang</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6f8;
+      color: #1f2937;
+      min-height: 100vh;
+      padding: 30px 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      padding: 32px;
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      color: #4b5563;
+      margin-bottom: 24px;
+    }
+
+    .info-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e3a8a;
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .stimulus-box {
+      background: #f8fafc;
+      border: 1px solid #dbe4ee;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .stimulus-box img {
+      max-width: 100%;
+      max-height: 500px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: white;
+    }
+
+    .question-box {
+      margin-bottom: 24px;
+    }
+
+    .question-box h2 {
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .choice-btn {
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .choice-btn:hover {
+      background: #d1d5db;
+    }
+
+    .choice-btn.active {
+      background: #2563eb;
+      color: white;
+    }
+
+    .details-box {
+      display: none;
+      margin-top: 24px;
+      padding: 20px;
+      background: #f8fafc;
+      border: 1px solid #dbe4ee;
+      border-radius: 12px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: white;
+    }
+
+    .footer-row {
+      margin-top: 30px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 12px 22px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .back-btn {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .back-btn:hover {
+      background: #d1d5db;
+    }
+
+    .submit-btn {
+      background: #2563eb;
+      color: white;
+    }
+
+    .submit-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .message {
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      display: none;
+      line-height: 1.5;
+    }
+
+    .message.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .message.success {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .next-link {
+      display: none;
+      margin-top: 18px;
+      text-align: right;
+    }
+
+    .next-link a {
+      display: inline-block;
+      text-decoration: none;
+      background: #2563eb;
+      color: white;
+      padding: 12px 22px;
+      border-radius: 8px;
+    }
+
+    .next-link a:hover {
+      background: #1d4ed8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Übungsdurchgang</h1>
+    <p class="subtitle">Übung 1 von 1</p>
+
+    <div class="info-box">
+      Dies ist ein Übungsdurchgang. Die Eingaben dienen nur dazu, die Bedienung kennenzulernen.
+    </div>
+
+    <div class="stimulus-box">
+      <img src="stimuli/uebung1.png" alt="Übungsszene ATC" />
+    </div>
+
+    <div class="question-box">
+      <h2>Liegt in der dargestellten Situation ein Konflikt vor?</h2>
+      <div class="button-row">
+        <button type="button" class="choice-btn" id="btnConflict">Konflikt</button>
+        <button type="button" class="choice-btn" id="btnNoConflict">Kein Konflikt</button>
+      </div>
+    </div>
+
+    <div class="details-box" id="detailsBox">
+      <div class="form-group">
+        <label for="callsign">Für welches Lfz (Callsign) würden Sie eine Anweisung geben?</label>
+        <select id="callsign">
+          <option value="">Bitte auswählen</option>
+          <option value="LFZ1">LFZ 1</option>
+          <option value="LFZ2">LFZ 2</option>
+          <option value="LFZ3">LFZ 3</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="instruction">Welche Anweisung würden Sie geben?</label>
+        <select id="instruction">
+          <option value="">Bitte auswählen</option>
+          <option value="steigen">Steigen</option>
+          <option value="sinken">Sinken</option>
+          <option value="links">Links drehen</option>
+          <option value="rechts">Rechts drehen</option>
+          <option value="geschwindigkeit">Geschwindigkeit anpassen</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="errorMessage" class="message error"></div>
+    <div id="successMessage" class="message success"></div>
+
+    <div class="footer-row">
+      <button type="button" class="back-btn" onclick="goBack()">Zurück</button>
+      <button type="button" class="submit-btn" onclick="submitPractice()">Übung abschließen</button>
+    </div>
+
+    <div id="nextLink" class="next-link">
+      <a href="trial.html">Zum Hauptteil weiter</a>
+    </div>
+  </div>
+
+  <script>
+    let selectedAnswer = null;
+
+    const btnConflict = document.getElementById("btnConflict");
+    const btnNoConflict = document.getElementById("btnNoConflict");
+    const detailsBox = document.getElementById("detailsBox");
+    const callsign = document.getElementById("callsign");
+    const instruction = document.getElementById("instruction");
+    const errorMessage = document.getElementById("errorMessage");
+    const successMessage = document.getElementById("successMessage");
+    const nextLink = document.getElementById("nextLink");
+
+    btnConflict.addEventListener("click", () => {
+      selectedAnswer = "conflict";
+      btnConflict.classList.add("active");
+      btnNoConflict.classList.remove("active");
+      detailsBox.style.display = "block";
+      errorMessage.style.display = "none";
+      successMessage.style.display = "none";
+    });
+
+    btnNoConflict.addEventListener("click", () => {
+      selectedAnswer = "no_conflict";
+      btnNoConflict.classList.add("active");
+      btnConflict.classList.remove("active");
+      detailsBox.style.display = "none";
+      callsign.value = "";
+      instruction.value = "";
+      errorMessage.style.display = "none";
+      successMessage.style.display = "none";
+    });
+
+    function submitPractice() {
+      errorMessage.style.display = "none";
+      successMessage.style.display = "none";
+
+      if (!selectedAnswer) {
+        errorMessage.textContent = "Bitte wählen Sie zunächst aus, ob ein Konflikt vorliegt oder nicht.";
+        errorMessage.style.display = "block";
+        return;
+      }
+
+      if (selectedAnswer === "conflict") {
+        if (!callsign.value || !instruction.value) {
+          errorMessage.textContent = "Bitte wählen Sie bei einem Konflikt sowohl ein Lfz als auch eine Anweisung aus.";
+          errorMessage.style.display = "block";
+          return;
+        }
+      }
+
+      const practiceData = {
+        answer: selectedAnswer,
+        callsign: selectedAnswer === "conflict" ? callsign.value : "",
+        instruction: selectedAnswer === "conflict" ? instruction.value : ""
+      };
+
+      sessionStorage.setItem("practice_result", JSON.stringify(practiceData));
+
+      successMessage.textContent = "Übungsdurchgang abgeschlossen. Sie können nun mit dem Hauptteil fortfahren.";
+      successMessage.style.display = "block";
+      nextLink.style.display = "block";
+    }
+
+    function goBack() {
+      window.location.href = "instructions.html";
+    }
+  </script>
+</body>
+</html>
