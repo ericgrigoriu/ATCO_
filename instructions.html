@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi Level ATC – Instruktionen</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6f8;
+      color: #1f2937;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 850px;
+      background: white;
+      padding: 40px;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      margin-top: 0;
+      color: #4b5563;
+      font-weight: normal;
+      margin-bottom: 30px;
+    }
+
+    h3 {
+      margin-top: 28px;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+      color: #111827;
+    }
+
+    p {
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .instruction-box {
+      background: #f8fafc;
+      border: 1px solid #dbe4ee;
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 18px 0;
+    }
+
+    ul {
+      margin-top: 8px;
+      margin-bottom: 8px;
+      padding-left: 22px;
+      line-height: 1.6;
+    }
+
+    .button-row {
+      margin-top: 35px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 12px 22px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .back-btn {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .back-btn:hover {
+      background: #d1d5db;
+    }
+
+    .next-btn {
+      background: #2563eb;
+      color: white;
+    }
+
+    .next-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .note {
+      margin-top: 22px;
+      font-size: 0.95rem;
+      color: #6b7280;
+    }
+
+    .warning {
+      margin-top: 20px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: #fef3c7;
+      color: #92400e;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Instruktionen</h1>
+    <h2>Bitte lesen Sie die folgenden Hinweise aufmerksam durch.</h2>
+
+    <p>
+      In dieser Untersuchung werden Ihnen nacheinander verschiedene Entscheidungssituationen
+      aus dem Kontext der Flugführung angezeigt.
+    </p>
+
+    <div class="instruction-box">
+      <h3>Ihre Aufgabe</h3>
+      <p>
+        Beurteilen Sie für jede dargestellte Situation, ob ein <strong>Konflikt</strong> vorliegt
+        oder <strong>kein Konflikt</strong> vorliegt.
+      </p>
+      <ul>
+        <li>Klicken Sie auf <strong>„Konflikt“</strong>, wenn Sie die Situation als konfliktbehaftet einschätzen.</li>
+        <li>Klicken Sie auf <strong>„Kein Konflikt“</strong>, wenn Sie keinen Konflikt erkennen.</li>
+      </ul>
+    </div>
+
+    <div class="instruction-box">
+      <h3>Bearbeitung</h3>
+      <p>
+        Bitte antworten Sie möglichst <strong>schnell</strong> und zugleich <strong>sorgfältig</strong>.
+        Die Bearbeitungszeit wird für jede Entscheidung erfasst.
+      </p>
+    </div>
+
+    <div class="instruction-box">
+      <h3>Unterstützte und nicht unterstützte Situationen</h3>
+      <p>
+        In einigen Durchgängen sehen Sie ausschließlich die dargestellte Situation.
+      </p>
+      <p>
+        In anderen Durchgängen wird zusätzlich ein Hinweis eines digitalen Systems eingeblendet.
+        Dieser Hinweis dient als zusätzliche Information und kann in Ihre Entscheidung einbezogen werden.
+      </p>
+    </div>
+
+    <div class="instruction-box">
+      <h3>Wichtiger Hinweis</h3>
+      <p>
+        Bitte bearbeiten Sie alle Situationen möglichst konzentriert und ohne Unterbrechung.
+      </p>
+    </div>
+
+    <div id="warningBox" class="warning">
+      Die Angaben von der Startseite wurden nicht gefunden. Bitte gehen Sie zurück zur Startseite.
+    </div>
+
+    <p class="note">
+      Mit Klick auf „Weiter“ gelangen Sie zum nächsten Abschnitt.
+    </p>
+
+    <div class="button-row">
+      <button class="back-btn" type="button" onclick="goBack()">Zurück</button>
+      <button class="next-btn" type="button" onclick="goNext()">Weiter</button>
+    </div>
+  </div>
+
+  <script>
+    const age = sessionStorage.getItem("participant_age");
+    const experience = sessionStorage.getItem("participant_atc_experience");
+    const warningBox = document.getElementById("warningBox");
+
+    if (!age || !experience) {
+      warningBox.style.display = "block";
+    }
+
+    function goBack() {
+      window.location.href = "index.html";
+    }
+
+    function goNext() {
+      // Später hier z. B. auf practice.html oder trial.html weiterleiten
+      window.location.href = "practice.html";
+    }
+  </script>
+</body>
+</html>
