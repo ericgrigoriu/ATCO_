@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi Level ATC – Nächster Abschnitt</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6f8;
+      color: #1f2937;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 850px;
+      background: white;
+      padding: 40px;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 14px;
+      font-size: 2rem;
+    }
+
+    p {
+      line-height: 1.6;
+      margin-bottom: 16px;
+      font-size: 1.05rem;
+    }
+
+    .info-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e3a8a;
+      padding: 16px 18px;
+      border-radius: 10px;
+      margin: 24px 0;
+    }
+
+    .button-row {
+      margin-top: 32px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .next-btn {
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-size: 1rem;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
+    }
+
+    .next-btn:hover {
+      background: #1d4ed8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Nächster Abschnitt</h1>
+
+    <p>
+      Der erste Abschnitt ist abgeschlossen.
+    </p>
+
+    <p>
+      Im folgenden Abschnitt werden Ihnen erneut Entscheidungssituationen angezeigt.
+    </p>
+
+    <div class="info-box">
+      Zusätzlich werden nun zu jeder Situation unterschiedliche Hinweise eines digitalen Systems eingeblendet.
+    </div>
+
+    <p>
+      Bitte bearbeiten Sie auch diesen Abschnitt möglichst zügig und sorgfältig.
+    </p>
+
+    <div class="button-row">
+      <button class="next-btn" type="button" onclick="goNext()">
+        Weiter
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function goNext() {
+      window.location.href = "trial_hint.html";
+    }
+  </script>
+</body>
+</html>
