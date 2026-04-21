@@ -144,9 +144,6 @@
           <option value="4">Hohe Erfahrung</option>
           <option value="5">Sehr hohe Erfahrung</option>
         </select>
-        <div class="hint">
-          Falls du es später feiner willst, kannst du hier statt Kategorien auch konkrete Jahre abfragen.
-        </div>
       </div>
 
       <div id="errorMessage" class="error">
@@ -154,7 +151,7 @@
       </div>
 
       <div class="button-row">
-        <button type="submit">Weiter</button>
+        <button type="button" id="startButton">Weiter</button>
       </div>
     </form>
   </div>
@@ -162,16 +159,11 @@
 
   <script src="api.js"></script>
 
-  
-  <script src="api.js"></script>
-
 <script>
-  const startForm = document.getElementById("startForm");
+  const startButton = document.getElementById("startButton");
   const errorMessage = document.getElementById("errorMessage");
 
-  startForm.addEventListener("submit", async function (event) {
-    event.preventDefault();
-
+  startButton.addEventListener("click", async function () {
     const age = document.getElementById("age").value.trim();
     const experience = document.getElementById("experience").value;
 
@@ -198,10 +190,9 @@
 
       window.location.href = "instructions.html";
     } catch (error) {
-  console.error("Start-Session-Fehler:", error);
-  errorMessage.textContent = "Fehler beim Starten der Session: " + error.message;
-  errorMessage.style.display = "block";
-}
+      console.error("Start-Session-Fehler:", error);
+      errorMessage.textContent = "Fehler beim Starten der Session: " + error.message;
+      errorMessage.style.display = "block";
     }
   });
 </script>
