@@ -159,30 +159,50 @@
     </form>
   </div>
 
-  <script>
-    const startForm = document.getElementById("startForm");
-    const errorMessage = document.getElementById("errorMessage");
 
-    startForm.addEventListener("submit", function (event) {
-      event.preventDefault();
+  <script src="api.js"></script>
 
-      const age = document.getElementById("age").value.trim();
-      const experience = document.getElementById("experience").value;
+  
+  <script src="api.js"></script>
 
-      if (!age || !experience) {
-        errorMessage.style.display = "block";
-        return;
-      }
+<script>
+  const startForm = document.getElementById("startForm");
+  const errorMessage = document.getElementById("errorMessage");
 
-      errorMessage.style.display = "none";
+  startForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-      // Für den Prototypen lokal im Browser speichern
+    const age = document.getElementById("age").value.trim();
+    const experience = document.getElementById("experience").value;
+
+    if (!age || !experience) {
+      errorMessage.textContent = "Bitte fülle beide Felder aus.";
+      errorMessage.style.display = "block";
+      return;
+    }
+
+    errorMessage.style.display = "none";
+
+    const sessionId = crypto.randomUUID();
+
+    try {
+      await insertRow("sessions", {
+        session_id: sessionId,
+        age: Number(age),
+        atc_experience: experience
+      });
+
+      sessionStorage.setItem("session_id", sessionId);
       sessionStorage.setItem("participant_age", age);
       sessionStorage.setItem("participant_atc_experience", experience);
 
-      // Nächste Seite
       window.location.href = "instructions.html";
-    });
-  </script>
+    } catch (error) {
+      console.error(error);
+      errorMessage.textContent = "Fehler beim Starten der Session.";
+      errorMessage.style.display = "block";
+    }
+  });
+</script>
 </body>
 </html>
