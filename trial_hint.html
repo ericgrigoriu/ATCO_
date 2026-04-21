@@ -284,7 +284,7 @@
       errorMessage.style.display = "none";
     });
 
-    function submitTrial() {
+     async function submitTrial() {
       const scenario = scenarios[currentIndex];
 
       errorMessage.style.display = "none";
@@ -316,17 +316,24 @@
         reaction_time_ms: reactionTime
       };
 
-      await saveHintResult(trialResult);
+      try {
+        await saveHintResult(trialResult);
 
-      results.push(trialResult);
-      sessionStorage.setItem("hint_results", JSON.stringify(results));
+        results.push(trialResult);
+        sessionStorage.setItem("hint_results", JSON.stringify(results));
 
-      currentIndex++;
+        currentIndex++;
 
-      if (currentIndex < scenarios.length) {
-        loadTrial();
-      } else {
-        window.location.href = "finish.html";
+        if (currentIndex < scenarios.length) {
+          loadTrial();
+        } else {
+          window.location.href = "finish.html";
+        }
+    
+      } catch (error) {
+        console.error("Fehler beim Speichern der Hinweis-Antwort:", error);
+        errorMessage.textContent = "Fehler beim Speichern der Antwort: " + error.message;
+        errorMessage.style.display = "block";
       }
     }
 
