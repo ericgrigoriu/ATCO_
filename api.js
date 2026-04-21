@@ -1,6 +1,6 @@
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7u7hBDakCpuDQqkwyX5Vn1a5p5Yzv0J1SSObS2MBJgLzV1dvxPvmwscxYAvOGsog0/exec";
 
-async function postToGoogleBackend(payload) {
+window.postToGoogleBackend = async function (payload) {
   const response = await fetch(APPS_SCRIPT_URL, {
     method: "POST",
     headers: {
@@ -9,40 +9,57 @@ async function postToGoogleBackend(payload) {
     body: JSON.stringify(payload)
   });
 
-  return response;
-}
+  const text = await response.text();
 
-async function startSession(data) {
-  return postToGoogleBackend({
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    throw new Error("Keine gültige JSON-Antwort vom Google-Backend: " + text);
+  }
+
+  if (!response.ok) {
+    throw new Error("HTTP " + response.status + ": " + text);
+  }
+
+  if (!data.ok) {
+    throw new Error(data.error || "Google-Backend hat ok=false zurückgegeben.");
+  }
+
+  return data;
+};
+
+window.startSession = async function (data) {
+  return window.postToGoogleBackend({
     type: "start_session",
     ...data
   });
-}
+};
 
-async function savePracticeResult(data) {
-  return postToGoogleBackend({
+window.savePracticeResult = async function (data) {
+  return window.postToGoogleBackend({
     type: "save_practice",
     ...data
   });
-}
+};
 
-async function saveMainResult(data) {
-  return postToGoogleBackend({
+window.saveMainResult = async function (data) {
+  return window.postToGoogleBackend({
     type: "save_main",
     ...data
   });
-}
+};
 
-async function saveHintResult(data) {
-  return postToGoogleBackend({
+window.saveHintResult = async function (data) {
+  return window.postToGoogleBackend({
     type: "save_hint",
     ...data
   });
-}
+};
 
-async function completeSession(sessionId) {
-  return postToGoogleBackend({
+window.completeSession = async function (sessionId) {
+  return window.postToGoogleBackend({
     type: "complete_session",
     session_id: sessionId
   });
-}
+};
