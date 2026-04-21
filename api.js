@@ -1,4 +1,4 @@
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7u7hBDakCpuDQqkwyX5Vn1a5p5Yzv0J1SSObS2MBJgLzV1dvxPvmwscxYAvOGsog0/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwPmO1aao_GBLMG9CobgaEKm0G39wLeqbO12M38pFvtTwx58V_wvr2lMYFHYJ6F4J0A/exec";
 
 window.postToGoogleBackend = async function (payload) {
   const response = await fetch(APPS_SCRIPT_URL, {
