@@ -130,21 +130,21 @@
 
     <form id="startForm">
       <div class="form-group">
-        <label for="age">Alter</label>
-        <input
-          type="number"
-          id="age"
-          name="age"
-          min="16"
-          max="100"
-          required
-          placeholder="Bitte Alter eingeben"
-        />
+        <label for="age">Altersklasse</label>
+        <select id="age" name="age" required>
+          <option value="">Bitte auswählen</option>
+          <option value="20-">Bis 20 Jahre</option>
+          <option value="20-29">20-29 Jahre</option>
+          <option value="30-39">30-39 Jahre</option>
+          <option value="40-49">40-49 Jahre</option>
+          <option value="50-59">50-59 Jahre</option>
+          <option value="60+">60+ Jahre</option>
+        </select>
       </div>
 
       <div class="form-group">
         <label for="experience">Erfahrung im Bereich / im Umgang mit ATC & ATM</label>
-        <p class="subtitle">Bitte schätzen Sie sich grob ein. Dies dient der Auswertung der Ergebnisse. Die Einschätzung muss nicht perfekt sein.</p>
+        <p class="subtitle">Bitte schätzen Sie sich grob ein. Dies dient der Auswertung der Ergebnisse.</p>
         <select id="experience" name="experience" required>
           <option value="">Bitte auswählen</option>
           <option value="Keine">Keine Erfahrung</option>
