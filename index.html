@@ -156,14 +156,11 @@
     </form>
   </div>
 
-
-<script src="api.js"></script>
-
 <script>
   const startButton = document.getElementById("startButton");
   const errorMessage = document.getElementById("errorMessage");
 
-  startButton.addEventListener("click", async function () {
+  startButton.addEventListener("click", function () {
     const age = document.getElementById("age").value.trim();
     const experience = document.getElementById("experience").value;
 
@@ -175,25 +172,10 @@
 
     errorMessage.style.display = "none";
 
-    const sessionId = crypto.randomUUID();
+    sessionStorage.setItem("participant_age", age);
+    sessionStorage.setItem("participant_atc_experience", experience);
 
-    try {
-      await insertRow("sessions", {
-        session_id: sessionId,
-        age: Number(age),
-        atc_experience: experience
-      });
-
-      sessionStorage.setItem("session_id", sessionId);
-      sessionStorage.setItem("participant_age", age);
-      sessionStorage.setItem("participant_atc_experience", experience);
-
-      window.location.href = "instructions.html";
-    } catch (error) {
-      console.error("Start-Session-Fehler:", error);
-      errorMessage.textContent = "Fehler beim Starten der Session: " + error.message;
-      errorMessage.style.display = "block";
-    }
+    window.location.href = "instructions.html";
   });
 </script>
 </body>
