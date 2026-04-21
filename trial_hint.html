@@ -306,6 +306,8 @@
       const endTime = performance.now();
       const reactionTime = Math.round(endTime - startTime);
 
+      const sessionId = sessionStorage.getItem("session_id");
+
       const trialResult = {
         session_id: sessionId,
         scenario_id: scenario.id,
