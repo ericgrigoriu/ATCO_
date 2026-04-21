@@ -1,5 +1,5 @@
-const SUPABASE_URL = https://ooswemrfxzofsarcoeib.supabase.co
-const SUPABASE_ANON_KEY = sb_publishable_renVzkJeNs8_Q4Y2ZNVbCQ_qNFc8L9w
+const SUPABASE_URL = "https://ooswemrfxzofsarcoeib.supabase.co",
+const SUPABASE_ANON_KEY = "sb_publishable_renVzkJeNs8_Q4Y2ZNVbCQ_qNFc8L9w";
 
 async function insertRow(table, row) {
   const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
@@ -15,7 +15,7 @@ async function insertRow(table, row) {
 
   if (!response.ok) {
     const text = await response.text();
-    throw new Error(`Insert into ${table} failed: ${text}`);
+    throw new Error(text);
   }
 }
 
@@ -38,6 +38,6 @@ async function completeSession(sessionId) {
 
   if (!response.ok) {
     const text = await response.text();
-    throw new Error(`Complete session failed: ${text}`);
+    throw new Error(text);
   }
 }
