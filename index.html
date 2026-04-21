@@ -178,22 +178,22 @@
     const sessionId = crypto.randomUUID();
 
     try {
-      await startSession({
-        session_id: sessionId,
-        age: Number(age),
-        atc_experience: experience
-      });
+  await startSession({
+    session_id: sessionId,
+    age: Number(age),
+    atc_experience: experience
+  });
 
-      sessionStorage.setItem("session_id", sessionId);
-      sessionStorage.setItem("participant_age", age);
-      sessionStorage.setItem("participant_atc_experience", experience);
+  sessionStorage.setItem("session_id", sessionId);
+  sessionStorage.setItem("participant_age", age);
+  sessionStorage.setItem("participant_atc_experience", experience);
 
-      window.location.href = "instructions.html";
-    } catch (error) {
-      console.error(error);
-      errorMessage.textContent = "Fehler beim Starten der Session.";
-      errorMessage.style.display = "block";
-    }
+  window.location.href = "instructions.html";
+} catch (error) {
+  console.error("Google-Backend-Fehler:", error);
+  errorMessage.textContent = "Fehler beim Starten der Session: " + error.message;
+  errorMessage.style.display = "block";
+}
   });
 </script>
 </body>
