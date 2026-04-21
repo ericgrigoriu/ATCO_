@@ -198,9 +198,10 @@
 
       window.location.href = "instructions.html";
     } catch (error) {
-      console.error(error);
-      errorMessage.textContent = "Fehler beim Starten der Session.";
-      errorMessage.style.display = "block";
+  console.error("Start-Session-Fehler:", error);
+  errorMessage.textContent = "Fehler beim Starten der Session: " + error.message;
+  errorMessage.style.display = "block";
+}
     }
   });
 </script>
