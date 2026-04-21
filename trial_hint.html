@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi Level ATC – Zweiter Hauptteil</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6f8;
+      color: #1f2937;
+      min-height: 100vh;
+      padding: 30px 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      padding: 32px;
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      color: #4b5563;
+      margin-bottom: 24px;
+    }
+
+    .top-bar {
+      margin-bottom: 20px;
+    }
+
+    .status-box {
+      display: inline-block;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e3a8a;
+      padding: 12px 16px;
+      border-radius: 10px;
+    }
+
+    .stimulus-box {
+      background: #f8fafc;
+      border: 1px solid #dbe4ee;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .stimulus-box img {
+      width: 100%;
+      max-width: 1400px;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: white;
+    }
+
+    .question-box h2 {
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .choice-btn {
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .choice-btn:hover {
+      background: #d1d5db;
+    }
+
+    .choice-btn.active {
+      background: #2563eb;
+      color: white;
+    }
+
+    .details-box {
+      display: none;
+      margin-top: 24px;
+      padding: 20px;
+      background: #f8fafc;
+      border: 1px solid #dbe4ee;
+      border-radius: 12px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: white;
+    }
+
+    .footer-row {
+      margin-top: 30px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .submit-btn {
+      border: none;
+      border-radius: 8px;
+      padding: 12px 22px;
+      font-size: 1rem;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
+    }
+
+    .submit-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .message {
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      display: none;
+      line-height: 1.5;
+    }
+
+    .message.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Hauptteil</h1>
+    <p class="subtitle">Bitte beurteilen Sie jede Situation möglichst zügig und sorgfältig.</p>
+
+    <div class="top-bar">
+      <div class="status-box" id="trialCounter">Situation 1 von 12</div>
+    </div>
+
+    <div class="stimulus-box">
+      <img id="stimulusImage" src="" alt="ATC-Situation" />
+    </div>
+
+    <div class="question-box">
+      <h2>Liegt in der dargestellten Situation ein Konflikt vor?</h2>
+      <div class="button-row">
+        <button type="button" class="choice-btn" id="btnConflict">Konflikt</button>
+        <button type="button" class="choice-btn" id="btnNoConflict">Kein Konflikt</button>
+      </div>
+    </div>
+
+    <div class="details-box" id="detailsBox">
+      <div class="form-group">
+        <label for="callsign">Für welches Lfz (Callsign) würden Sie eine Anweisung geben?</label>
+        <input
+          type="text"
+          id="callsign"
+          placeholder="Bitte Callsign eingeben"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="instruction">Welche Anweisung würden Sie geben?</label>
+        <select id="instruction">
+          <option value="">Bitte auswählen</option>
+          <option value="steigen">Steigen</option>
+          <option value="sinken">Sinken</option>
+          <option value="links">Links drehen</option>
+          <option value="rechts">Rechts drehen</option>
+          <option value="geschwindigkeit">Geschwindigkeit anpassen</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="errorMessage" class="message error"></div>
+
+    <div class="footer-row">
+      <button type="button" class="submit-btn" onclick="submitTrial()">Weiter</button>
+    </div>
+  </div>
+
+  <script>
+    const scenarios = [
+      { id: 1,  image: "Stimuli/Bild8.png"  },
+      { id: 2,  image: "Stimuli/Bild9.png"  },
+      { id: 3,  image: "Stimuli/Bild10.png" },
+      { id: 4,  image: "Stimuli/Bild11.png" },
+      { id: 5,  image: "Stimuli/Bild12.png" },
+      { id: 6,  image: "Stimuli/Bild13.png" },
+      { id: 7,  image: "Stimuli/Bild14.png" },
+      { id: 8,  image: "Stimuli/Bild15.png" },
+      { id: 9,  image: "Stimuli/Bild16.png" },
+      { id: 10, image: "Stimuli/Bild17.png" },
+      { id: 11, image: "Stimuli/Bild18.png" },
+      { id: 12, image: "Stimuli/Bild19.png" }
+    ];
+
+    let currentIndex = 0;
+    let selectedAnswer = null;
+    let startTime = 0;
+    let results = JSON.parse(sessionStorage.getItem("hint_results")) || [];
+
+    const stimulusImage = document.getElementById("stimulusImage");
+    const trialCounter = document.getElementById("trialCounter");
+    const btnConflict = document.getElementById("btnConflict");
+    const btnNoConflict = document.getElementById("btnNoConflict");
+    const detailsBox = document.getElementById("detailsBox");
+    const callsign = document.getElementById("callsign");
+    const instruction = document.getElementById("instruction");
+    const errorMessage = document.getElementById("errorMessage");
+
+    function loadTrial() {
+      const scenario = scenarios[currentIndex];
+
+      selectedAnswer = null;
+      errorMessage.style.display = "none";
+
+      btnConflict.classList.remove("active");
+      btnNoConflict.classList.remove("active");
+
+      detailsBox.style.display = "none";
+      callsign.value = "";
+      instruction.value = "";
+
+      trialCounter.textContent = `Situation ${currentIndex + 1} von ${scenarios.length}`;
+
+      stimulusImage.onload = () => {
+        startTime = performance.now();
+      };
+
+      stimulusImage.src = scenario.image;
+    }
+
+    btnConflict.addEventListener("click", () => {
+      selectedAnswer = "conflict";
+      btnConflict.classList.add("active");
+      btnNoConflict.classList.remove("active");
+      detailsBox.style.display = "block";
+      errorMessage.style.display = "none";
+    });
+
+    btnNoConflict.addEventListener("click", () => {
+      selectedAnswer = "no_conflict";
+      btnNoConflict.classList.add("active");
+      btnConflict.classList.remove("active");
+      detailsBox.style.display = "none";
+      callsign.value = "";
+      instruction.value = "";
+      errorMessage.style.display = "none";
+    });
+
+    function submitTrial() {
+      const scenario = scenarios[currentIndex];
+
+      errorMessage.style.display = "none";
+
+      if (!selectedAnswer) {
+        errorMessage.textContent = "Bitte wählen Sie zunächst aus, ob ein Konflikt vorliegt oder nicht.";
+        errorMessage.style.display = "block";
+        return;
+      }
+
+      if (selectedAnswer === "conflict") {
+        if (!callsign.value.trim() || !instruction.value) {
+          errorMessage.textContent = "Bitte geben Sie bei einem Konflikt sowohl ein Callsign als auch eine Anweisung an.";
+          errorMessage.style.display = "block";
+          return;
+        }
+      }
+
+      const endTime = performance.now();
+      const reactionTime = Math.round(endTime - startTime);
+
+      const trialResult = {
+        scenarioId: scenario.id,
+        image: scenario.image,
+        answer: selectedAnswer,
+        callsign: selectedAnswer === "conflict" ? callsign.value.trim() : "",
+        instruction: selectedAnswer === "conflict" ? instruction.value : "",
+        reactionTimeMs: reactionTime
+      };
+
+      results.push(trialResult);
+      sessionStorage.setItem("hint_results", JSON.stringify(results));
+
+      currentIndex++;
+
+      if (currentIndex < scenarios.length) {
+        loadTrial();
+      } else {
+        window.location.href = "finish.html";
+      }
+    }
+
+    loadTrial();
+  </script>
+</body>
+</html>
