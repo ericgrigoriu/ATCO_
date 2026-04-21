@@ -307,13 +307,16 @@
       const reactionTime = Math.round(endTime - startTime);
 
       const trialResult = {
-        scenarioId: scenario.id,
+        session_id: sessionId,
+        scenario_id: scenario.id,
         image: scenario.image,
         answer: selectedAnswer,
         callsign: selectedAnswer === "conflict" ? callsign.value.trim() : "",
         instruction: selectedAnswer === "conflict" ? instruction.value : "",
-        reactionTimeMs: reactionTime
+        reaction_time_ms: reactionTime
       };
+
+      await saveHintResult(trialResult);
 
       results.push(trialResult);
       sessionStorage.setItem("hint_results", JSON.stringify(results));
