@@ -163,7 +163,7 @@
   const startButton = document.getElementById("startButton");
   const errorMessage = document.getElementById("errorMessage");
 
-  startButton.addEventListener("click", function () {
+  startButton.addEventListener("click", async function () {
     const age = document.getElementById("age").value.trim();
     const experience = document.getElementById("experience").value;
 
@@ -175,10 +175,25 @@
 
     errorMessage.style.display = "none";
 
-    sessionStorage.setItem("participant_age", age);
-    sessionStorage.setItem("participant_atc_experience", experience);
+    const sessionId = crypto.randomUUID();
 
-    window.location.href = "instructions.html";
+    try {
+      await startSession({
+        session_id: sessionId,
+        age: Number(age),
+        atc_experience: experience
+      });
+
+      sessionStorage.setItem("session_id", sessionId);
+      sessionStorage.setItem("participant_age", age);
+      sessionStorage.setItem("participant_atc_experience", experience);
+
+      window.location.href = "instructions.html";
+    } catch (error) {
+      console.error(error);
+      errorMessage.textContent = "Fehler beim Starten der Session.";
+      errorMessage.style.display = "block";
+    }
   });
 </script>
 </body>
