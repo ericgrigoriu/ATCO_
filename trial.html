@@ -231,111 +231,110 @@
 
   <script src="api.js"></script>
 
-  <script>
-   const scenarios = [
-  { id: 1, image: "stimuli/Bild2.png" },
-  { id: 2, image: "stimuli/Bild3.png" },
-  { id: 3, image: "stimuli/Bild4.png" },
-  { id: 4, image: "stimuli/Bild5.png" },
-  { id: 5, image: "stimuli/Bild6.png" },
-  { id: 6, image: "stimuli/Bild7.png" }
-];
+  <script src="api.js"></script>
 
-    let currentIndex = 0;
-    let selectedAnswer = null;
-    let startTime = 0;
-    let results = JSON.parse(sessionStorage.getItem("main_results")) || [];
+<script>
+  const scenarios = [
+    { id: 1, image: "stimuli/Bild2.png" },
+    { id: 2, image: "stimuli/Bild3.png" },
+    { id: 3, image: "stimuli/Bild4.png" },
+    { id: 4, image: "stimuli/Bild5.png" },
+    { id: 5, image: "stimuli/Bild6.png" },
+    { id: 6, image: "stimuli/Bild7.png" }
+  ];
 
-    const stimulusImage = document.getElementById("stimulusImage");
-    const trialCounter = document.getElementById("trialCounter");
-    const btnConflict = document.getElementById("btnConflict");
-    const btnNoConflict = document.getElementById("btnNoConflict");
-    const detailsBox = document.getElementById("detailsBox");
-    const callsign = document.getElementById("callsign");
-    const instruction = document.getElementById("instruction");
-    const errorMessage = document.getElementById("errorMessage");
+  let currentIndex = 0;
+  let selectedAnswer = null;
+  let startTime = 0;
+  let results = JSON.parse(sessionStorage.getItem("main_results")) || [];
 
-    function loadTrial() {
-      const scenario = scenarios[currentIndex];
+  const stimulusImage = document.getElementById("stimulusImage");
+  const trialCounter = document.getElementById("trialCounter");
+  const btnConflict = document.getElementById("btnConflict");
+  const btnNoConflict = document.getElementById("btnNoConflict");
+  const detailsBox = document.getElementById("detailsBox");
+  const callsign = document.getElementById("callsign");
+  const instruction = document.getElementById("instruction");
+  const errorMessage = document.getElementById("errorMessage");
 
-      selectedAnswer = null;
-      errorMessage.style.display = "none";
+  function loadTrial() {
+    const scenario = scenarios[currentIndex];
 
-      btnConflict.classList.remove("active");
-      btnNoConflict.classList.remove("active");
+    selectedAnswer = null;
+    errorMessage.style.display = "none";
 
-      detailsBox.style.display = "none";
-      callsign.value = "";
-      instruction.value = "";
+    btnConflict.classList.remove("active");
+    btnNoConflict.classList.remove("active");
 
-      trialCounter.textContent = `Situation ${currentIndex + 1} von ${scenarios.length}`;
+    detailsBox.style.display = "none";
+    callsign.value = "";
+    instruction.value = "";
 
-      stimulusImage.onload = () => {
-        startTime = performance.now();
-      };
+    trialCounter.textContent = `Situation ${currentIndex + 1} von ${scenarios.length}`;
 
-      stimulusImage.src = scenario.image;
+    stimulusImage.onload = () => {
+      startTime = performance.now();
+    };
 
+    stimulusImage.src = scenario.image;
+  }
+
+  btnConflict.addEventListener("click", () => {
+    selectedAnswer = "conflict";
+    btnConflict.classList.add("active");
+    btnNoConflict.classList.remove("active");
+    detailsBox.style.display = "block";
+    errorMessage.style.display = "none";
+  });
+
+  btnNoConflict.addEventListener("click", () => {
+    selectedAnswer = "no_conflict";
+    btnNoConflict.classList.add("active");
+    btnConflict.classList.remove("active");
+    detailsBox.style.display = "none";
+    callsign.value = "";
+    instruction.value = "";
+    errorMessage.style.display = "none";
+  });
+
+  async function submitTrial() {
+    const scenario = scenarios[currentIndex];
+
+    errorMessage.style.display = "none";
+
+    if (!selectedAnswer) {
+      errorMessage.textContent = "Bitte wählen Sie zunächst aus, ob ein Konflikt vorliegt oder nicht.";
+      errorMessage.style.display = "block";
+      return;
     }
 
-    btnConflict.addEventListener("click", () => {
-      selectedAnswer = "conflict";
-      btnConflict.classList.add("active");
-      btnNoConflict.classList.remove("active");
-      detailsBox.style.display = "block";
-      errorMessage.style.display = "none";
-    });
-
-    btnNoConflict.addEventListener("click", () => {
-      selectedAnswer = "no_conflict";
-      btnNoConflict.classList.add("active");
-      btnConflict.classList.remove("active");
-      detailsBox.style.display = "none";
-      callsign.value = "";
-      instruction.value = "";
-      errorMessage.style.display = "none";
-    });
-
-    async function submitTrial() {
-      const scenario = scenarios[currentIndex];
-
-      errorMessage.style.display = "none";
-
-      if (!selectedAnswer) {
-        errorMessage.textContent = "Bitte wählen Sie zunächst aus, ob ein Konflikt vorliegt oder nicht.";
+    if (selectedAnswer === "conflict") {
+      if (!callsign.value.trim() || !instruction.value) {
+        errorMessage.textContent = "Bitte geben Sie bei einem Konflikt sowohl ein Callsign als auch eine Anweisung an.";
         errorMessage.style.display = "block";
         return;
       }
+    }
 
-      if (selectedAnswer === "conflict") {
-        if (!callsign.value.trim() || !instruction.value) {
-          errorMessage.textContent = "Bitte geben Sie bei einem Konflikt sowohl ein Callsign als auch eine Anweisung an.";
-          errorMessage.style.display = "block";
-          return;
-        }
-      }
+    const endTime = performance.now();
+    const reactionTime = Math.round(endTime - startTime);
+    const sessionId = sessionStorage.getItem("session_id");
 
-      const endTime = performance.now();
-      const reactionTime = Math.round(endTime - startTime);
+    const trialResult = {
+      session_id: sessionId,
+      scenario_id: scenario.id,
+      image: scenario.image,
+      answer: selectedAnswer,
+      callsign: selectedAnswer === "conflict" ? callsign.value.trim() : "",
+      instruction: selectedAnswer === "conflict" ? instruction.value : "",
+      reaction_time_ms: reactionTime
+    };
 
-      const sessionId = sessionStorage.getItem("session_id");
+    try {
+      await saveMainResult(trialResult);
 
-      const trialResult = {
-        session_id: sessionId,
-        scenarioId: scenario.id,
-        image: scenario.image,
-        answer: selectedAnswer,
-        callsign: selectedAnswer === "conflict" ? callsign.value.trim() : "",
-        instruction: selectedAnswer === "conflict" ? instruction.value : "",
-        reaction_Time_Ms: reactionTime
-      };
-
-      try {
-        await saveMainResult(trialResult);
-
-      
-        results.push(trialResult);
-        sessionStorage.setItem("main_results", JSON.stringify(results));
+      results.push(trialResult);
+      sessionStorage.setItem("main_results", JSON.stringify(results));
 
       currentIndex++;
 
@@ -345,12 +344,13 @@
         window.location.href = "transition.html";
       }
     } catch (error) {
-        console.error("Fehler beim Speichern der Hauptteil-Antwort:", error);
-        errorMessage.textContent = "Fehler beim Speichern der Antwort: " + error.message;
-        errirMessage.style.display = "block";
-      }
-
-    loadTrial();
-  </script>
+      console.error("Fehler beim Speichern der Hauptteil-Antwort:", error);
+      errorMessage.textContent = "Fehler beim Speichern der Antwort: " + error.message;
+      errorMessage.style.display = "block";
+    }
+  }
+  
+  loadTrial();
+</script>
 </body>
 </html>
