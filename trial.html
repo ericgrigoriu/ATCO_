@@ -323,7 +323,7 @@
     const trialResult = {
       session_id: sessionId,
       scenario_id: scenario.id,
-      image: scenario.id,
+      image: scenario.image.split("/").pop().replace("png", ""),
       answer: selectedAnswer,
       callsign: selectedAnswer === "conflict" ? callsign.value.trim() : "",
       instruction: selectedAnswer === "conflict" ? instruction.value : "",
