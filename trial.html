@@ -278,6 +278,7 @@
     };
 
     stimulusImage.src = scenario.image;
+    preloadNextImage();
   }
 
   btnConflict.addEventListener("click", () => {
@@ -348,6 +349,15 @@
       await Promise.allSettled(pendingSaves);
       window.location.href = "transition.html";
     }
+  }
+
+  function preloadImage() {
+    const nextScenario = scenarios[currentIndex + 1];
+    if (!nextScenario) return;
+
+    const img = new Image();
+    img.src = nextScenario.image;
+  }
   
   loadTrial();
 </script>
