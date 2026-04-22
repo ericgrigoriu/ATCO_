@@ -339,8 +339,8 @@
          await Promise.allSettled(pendingSaves);
          window.location.href = "finish.html";
        }
-
-       function preloadNextImage() {
+     }
+      function preloadNextImage() {
          const nextScenario = scenarios[currentIndex + 1];
          if (!nextScenario) return;
 
