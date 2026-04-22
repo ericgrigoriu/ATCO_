@@ -63,3 +63,11 @@ window.completeSession = async function (sessionId) {
     session_id: sessionId
   });
 };
+
+window.saveFeedback = async function (data) {
+  return window.postToGoogleBackend({
+    type: "save_feedback",
+    ...data
+  });
+};
+
