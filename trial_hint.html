@@ -236,6 +236,7 @@
     let selectedAnswer = null;
     let startTime = 0;
     let results = JSON.parse(sessionStorage.getItem("hint_results")) || [];
+    let pendingSaves = [];
 
     const stimulusImage = document.getElementById("stimulusImage");
     const trialCounter = document.getElementById("trialCounter");
@@ -266,6 +267,7 @@
       };
 
       stimulusImage.src = scenario.image;
+      preloadNextImage();
     }
 
     btnConflict.addEventListener("click", () => {
@@ -320,26 +322,31 @@
         reaction_time_ms: reactionTime
       };
 
-      try {
-        await saveHintResult(trialResult);
+      results.push(trialResult);
+      sessionStorage.setItem("hint_results", JSON.stringify(results));
 
-        results.push(trialResult);
-        sessionStorage.setItem("hint_results", JSON.stringify(results));
-
-        currentIndex++;
-
-        if (currentIndex < scenarios.length) {
-          loadTrial();
-        } else {
-          window.location.href = "finish.html";
-        }
-    
-      } catch (error) {
+      const savePromise = saveHintResult(trialResult).catch(error) => {
         console.error("Fehler beim Speichern der Hinweis-Antwort:", error);
-        errorMessage.textContent = "Fehler beim Speichern der Antwort: " + error.message;
-        errorMessage.style.display = "block";
-      }
-    }
+      });
+
+       pendingSaves.push(savePromise);
+
+       currentIndex++;
+
+       if (currentIndex < scenarios.length) {
+         loadTrial();
+       } else {
+         await Promise.allSettled(pendingSaves);
+         window.location.href = "finish.html";
+       }
+
+       function preloadNextImage() {
+         const nextScenario = scenarios[currentIndex + 1];
+         if (!nextScenario) return;
+
+         const img = new Image();
+         img.src = nextScenario.image;
+       }
 
     loadTrial();
   </script>
