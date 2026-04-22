@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi Level ATC – Feedback</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6f8;
+      color: #1f2937;
+      min-height: 100vh;
+      padding: 30px 20px;
+    }
+
+    .container {
+      max-width: 950px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      padding: 32px;
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      color: #4b5563;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    .feedback-card {
+      margin-bottom: 24px;
+      padding: 20px;
+      background: #f8fafc;
+      border: 1px solid #dbe4ee;
+      border-radius: 12px;
+    }
+
+    .feedback-card h2 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 1.15rem;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: white;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .footer-row {
+      margin-top: 30px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .submit-btn {
+      border: none;
+      border-radius: 8px;
+      padding: 12px 22px;
+      font-size: 1rem;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
+    }
+
+    .submit-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .message {
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      display: none;
+      line-height: 1.5;
+    }
+
+    .message.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Abschließendes Feedback</h1>
+    <p class="subtitle">
+      Bitte bewerten Sie die einzelnen Verfahren bzw. Unterstützungsformen jeweils auf einer Skala von 0 bis 10
+      und geben Sie optional einen kurzen Kommentar dazu an.
+    </p>
+
+    <div id="feedbackContainer"></div>
+
+    <div id="errorMessage" class="message error"></div>
+
+    <div class="footer-row">
+      <button type="button" class="submit-btn" onclick="submitFeedback()">
+        Feedback absenden
+      </button>
+    </div>
+  </div>
+
+  <script src="api.js"></script>
+  <script>
+    const feedbackItems = [
+      { key: "without_support", label: "Ohne Unterstützung" },
+      { key: "support_1", label: "Unterstützung 1" },
+      { key: "support_2", label: "Unterstützung 2" },
+      { key: "support_3", label: "Unterstützung 3" },
+      { key: "support_4", label: "Unterstützung 4" },
+      { key: "support_5", label: "Unterstützung 5" }
+    ];
+
+    const feedbackContainer = document.getElementById("feedbackContainer");
+
+    function createRatingOptions() {
+      let options = '<option value="">Bitte auswählen</option>';
+      for (let i = 0; i <= 10; i++) {
+        options += `<option value="${i}">${i}</option>`;
+      }
+      return options;
+    }
+
+    function renderFeedbackForm() {
+      feedbackContainer.innerHTML = feedbackItems.map(item => `
+        <div class="feedback-card">
+          <h2>${item.label}</h2>
+
+          <div class="form-group">
+            <label for="rating_${item.key}">
+              Bewertung (0 = sehr schlecht / 10 = sehr gut)
+            </label>
+            <select id="rating_${item.key}">
+              ${createRatingOptions()}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="comment_${item.key}">
+              Freitext / Eindruck
+            </label>
+            <textarea
+              id="comment_${item.key}"
+              placeholder="Optional"
+            ></textarea>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    async function submitFeedback() {
+      const errorMessage = document.getElementById("errorMessage");
+      errorMessage.style.display = "none";
+
+      const sessionId = sessionStorage.getItem("session_id");
+
+      const collectedItems = feedbackItems.map(item => {
+        const rating = document.getElementById(`rating_${item.key}`).value;
+        const comment = document.getElementById(`comment_${item.key}`).value.trim();
+
+        return {
+          key: item.key,
+          label: item.label,
+          rating: rating,
+          comment: comment
+        };
+      });
+
+      const missingRating = collectedItems.some(item => item.rating === "");
+
+      if (missingRating) {
+        errorMessage.textContent = "Bitte geben Sie für jeden Block eine Bewertung an.";
+        errorMessage.style.display = "block";
+        return;
+      }
+
+      const feedbackData = {
+        session_id: sessionId,
+        feedback_items: collectedItems
+      };
+
+      try {
+        await saveFeedback(feedbackData);
+        window.location.href = "finish.html";
+      } catch (error) {
+        console.error("Fehler beim Speichern des Feedbacks:", error);
+        errorMessage.textContent = "Fehler beim Speichern des Feedbacks: " + error.message;
+        errorMessage.style.display = "block";
+      }
+    }
+
+    renderFeedbackForm();
+  </script>
+</body>
+</html>
