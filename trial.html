@@ -247,6 +247,7 @@
   let selectedAnswer = null;
   let startTime = 0;
   let results = JSON.parse(sessionStorage.getItem("main_results")) || [];
+  let pendingSaves = [];
 
   const stimulusImage = document.getElementById("stimulusImage");
   const trialCounter = document.getElementById("trialCounter");
@@ -330,25 +331,23 @@
       reaction_time_ms: reactionTime
     };
 
-    try {
-      await saveMainResult(trialResult);
+    results.push(trialResult);
+    sessionStorage.setItem("main_results", JSON.stringify(results));
 
-      results.push(trialResult);
-      sessionStorage.setItem("main_results", JSON.stringify(results));
-
-      currentIndex++;
-
-      if (currentIndex < scenarios.length) {
-        loadTrial();
-      } else {
-        window.location.href = "transition.html";
-      }
-    } catch (error) {
+    const savePromise = saveMainResult(trialResult).catch((error) => {
       console.error("Fehler beim Speichern der Hauptteil-Antwort:", error);
-      errorMessage.textContent = "Fehler beim Speichern der Antwort: " + error.message;
-      errorMessage.style.display = "block";
+    });
+
+    pendingSaves.push(savePromise);
+
+    currentIndex++;
+
+    if (currentIndex < scenarios.length) {
+      loadTrial();
+    } else {
+      await Promise.allSettled(pendingSaves);
+      window.location.href = "transition.html";
     }
-  }
   
   loadTrial();
 </script>
