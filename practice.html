@@ -183,7 +183,6 @@
     }
 
     .next-link {
-      display: none;
       margin-top: 18px;
       text-align: right;
     }
@@ -253,8 +252,10 @@
       <button type="button" class="back-btn" onclick="goBack()">Zurück</button>
     </div>
 
-    <div id="nextLink" class="next-link">
-      <a href="trial.html">Zum Hauptteil weiter</a>
+    <div class="next-link">
+      <button type="button" class="submit-btn" onclick="submitPractice()">
+        Zum Hauptteil weiter
+      </button>
     </div>
   </div>
 
@@ -268,7 +269,6 @@
     const instruction = document.getElementById("instruction");
     const errorMessage = document.getElementById("errorMessage");
     const successMessage = document.getElementById("successMessage");
-    const nextLink = document.getElementById("nextLink");
 
     btnConflict.addEventListener("click", () => {
       selectedAnswer = "conflict";
@@ -288,7 +288,7 @@
       instruction.value = "";
       errorMessage.style.display = "none";
       successMessage.style.display = "none";
-    });
+    });F<div
 
     function submitPractice() {
       errorMessage.style.display = "none";
@@ -316,9 +316,8 @@
 
       sessionStorage.setItem("practice_result", JSON.stringify(practiceData));
 
-      successMessage.textContent = "Übungsdurchgang abgeschlossen. Sie können nun mit dem Hauptteil fortfahren.";
-      successMessage.style.display = "block";
-      nextLink.style.display = "block";
+      sessionStorage.setItem("practice_result", JSON.stringify(practiceData));
+      window.location.href = "trial.html";
     }
 
     function goBack() {
