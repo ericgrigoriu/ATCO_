@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi Level ATC – Unterstützung durch digitalen Controller</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6f8;
+      color: #1f2937;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 850px;
+      background: white;
+      padding: 40px;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 2rem;
+    }
+
+    h2 {
+      margin-top: 0;
+      margin-bottom: 18px;
+      font-size: 1.2rem;
+      color: #4b5563;
+      font-weight: 600;
+    }
+
+    p {
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .info-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e3a8a;
+      padding: 16px 18px;
+      border-radius: 10px;
+      margin: 24px 0;
+    }
+
+    .button-row {
+      margin-top: 32px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .next-btn {
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-size: 1rem;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
+    }
+
+    .next-btn:hover {
+      background: #1d4ed8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="title">Nächster Abschnitt</h1>
+    <h2 id="subtitle">Unterstützung</h2>
+
+    <p id="introText">
+      Im folgenden Abschnitt wird eine Form von Unterstützung eingeblendet.
+    </p>
+
+    <div class="info-box" id="supportDescription">
+      Beschreibung der Unterstützung.
+    </div>
+
+    <p id="outroText">
+      Bitte bearbeiten Sie auch diesen Abschnitt möglichst zügig und sorgfältig.
+    </p>
+
+    <div class="button-row">
+      <button class="next-btn" type="button" onclick="goNext()">
+        Weiter
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const block = params.get("block") || "1";
+
+    const supportConfig = {
+      "1": {
+        title: "Nächster Abschnitt",
+        subtitle: "Unterstützung 1",
+        introText: "Im folgenden Abschnitt bearbeiten Sie Entscheidungssituationen mit einer ersten Form von Unterstützung.",
+        supportDescription: "Durch eine Textausgabe gibt das System das Problem vor, dass gefunden wurde. Sie entscheiden, ob Sie eingreifen oder nicht.",
+        outroText: "Bitte berücksichtigen Sie diese Unterstützung bei Ihrer Bearbeitung."
+      },
+      "2": {
+        title: "Nächster Abschnitt",
+        subtitle: "Unterstützung 2",
+        introText: "Im folgenden Abschnitt bearbeiten Sie Entscheidungssituationen mit einer zweiten Form von Unterstützung.",
+        supportDescription: "Hier steht die Beschreibung von Unterstützung 2. Zum Beispiel: Es wird ein auditiver Hinweis gegeben.",
+        outroText: "Bitte bearbeiten Sie auch diesen Abschnitt möglichst zügig und sorgfältig."
+      },
+      "3": {
+        title: "Nächster Abschnitt",
+        subtitle: "Unterstützung 3",
+        introText: "Im folgenden Abschnitt bearbeiten Sie Entscheidungssituationen mit einer dritten Form von Unterstützung.",
+        supportDescription: "Hier steht die Beschreibung von Unterstützung 3.",
+        outroText: "Bitte bearbeiten Sie auch diesen Abschnitt möglichst zügig und sorgfältig."
+      },
+      "4": {
+        title: "Nächster Abschnitt",
+        subtitle: "Unterstützung 4",
+        introText: "Im folgenden Abschnitt bearbeiten Sie Entscheidungssituationen mit einer vierten Form von Unterstützung.",
+        supportDescription: "Hier steht die Beschreibung von Unterstützung 4.",
+        outroText: "Bitte bearbeiten Sie auch diesen Abschnitt möglichst zügig und sorgfältig."
+      },
+      "5": {
+        title: "Nächster Abschnitt",
+        subtitle: "Unterstützung 5",
+        introText: "Im folgenden Abschnitt bearbeiten Sie Entscheidungssituationen mit einer fünften Form von Unterstützung.",
+        supportDescription: "Hier steht die Beschreibung von Unterstützung 5.",
+        outroText: "Bitte bearbeiten Sie auch diesen Abschnitt möglichst zügig und sorgfältig."
+      }
+    };
+
+    const current = supportConfig[block] || supportConfig["1"];
+
+    document.getElementById("title").textContent = current.title;
+    document.getElementById("subtitle").textContent = current.subtitle;
+    document.getElementById("introText").textContent = current.introText;
+    document.getElementById("supportDescription").textContent = current.supportDescription;
+    document.getElementById("outroText").textContent = current.outroText;
+
+    function goNext() {
+      window.location.href = `trial_hint.html?block=${block}`;
+    }
+  </script>
+</body>
+</html>
