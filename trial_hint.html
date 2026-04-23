@@ -217,20 +217,29 @@
   <script src="api.js"></script>
 
   <script>
-    const scenarios = [
+
+    const params = new URLSearchParams(window.location.search);
+    const block = params.get("block") || "1";
+    
+    const scenariosByBlock = {
+      "1": [
       { id: 1,  image: "Stimuli/Bild8.png"  },
       { id: 2,  image: "Stimuli/Bild9.png"  },
       { id: 3,  image: "Stimuli/Bild10.png" },
       { id: 4,  image: "Stimuli/Bild11.png" },
       { id: 5,  image: "Stimuli/Bild12.png" },
       { id: 6,  image: "Stimuli/Bild13.png" },
+        ],
+      "2": [
       { id: 7,  image: "Stimuli/Bild14.png" },
       { id: 8,  image: "Stimuli/Bild15.png" },
       { id: 9,  image: "Stimuli/Bild16.png" },
       { id: 10, image: "Stimuli/Bild17.png" },
       { id: 11, image: "Stimuli/Bild18.png" },
       { id: 12, image: "Stimuli/Bild19.png" }
-    ];
+    ]
+    };
+    const scenarios = scenariosByBlock[block] || scenariosByBlock["1"];
 
     let currentIndex = 0;
     let selectedAnswer = null;
@@ -337,7 +346,12 @@
          loadTrial();
        } else {
          await Promise.allSettled(pendingSaves);
-         window.location.href = "feedback.html";
+         const nextBlock = Number(block) + 1;
+
+         if (nextBlock <= 5) {
+           window.location.href = 'support_intro.html?block=${nextBlock}';
+         } else {
+           window.location.href = "feedback.html";
        }
      }
       function preloadNextImage() {
