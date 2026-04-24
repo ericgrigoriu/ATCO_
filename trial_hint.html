@@ -405,7 +405,7 @@
       await Promise.allSettled(pendingSaves);
       const nextBlock = Number(block) + 1;
 
-      if (nextBlock <= 2) {
+      if (nextBlock <= 3) {
         window.location.href = `support_intro.html?block=${nextBlock}`;
       } else {
         window.location.href = "feedback.html";
