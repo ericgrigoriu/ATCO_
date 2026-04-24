@@ -320,9 +320,11 @@
       supportAudio.currentTime = 0;
       supportAudio.src = scenario.audio;
 
-      supportAudio.play().catch((error) => {
-      console.warn("Audio konnte nicht automatisch abgespielt werden:", error);
-      });
+      setTimeout(() => {
+        supportAudio.play().catch((error) => {
+          console.warn("Audio konnte nicht automatisch abgespielt werden:", error);
+        });
+      }, 2000);
     } else {
       supportAudio.pause();
       supportAudio.currentTime = 0;
