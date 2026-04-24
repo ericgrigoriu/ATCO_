@@ -229,6 +229,8 @@
     </div>
   </div>
 
+  <audio id="supportAudio" preload="auto"></audio>
+
   <script src="api.js"></script>
 
   <script>
@@ -252,7 +254,14 @@
       { id: 11, image: "stimuli/Farbe5.png", supportText: "" },
       { id: 12, image: "stimuli/Farbe6.png", supportText: "" },
       { id: 13, image: "stimuli/Farbe7.png", supportText: "" },
-    ]
+    ],
+    "3": [
+      { id: 14, image: "stimuli/Audio1.png, supportText: "", audio: "audio/1.mp3" },
+      { id: 15, image: "stimuli/Audio2.png, supportText: "", audio: "audio/2.mp3" },
+      { id: 16, image: "stimuli/Audio3.png, supportText: "", audio: "audio/3.mp3" },
+      { id: 17, image: "stimuli/Audio4.png, supportText: "", audio: "audio/4.mp3" },
+      { id: 18, image: "stimuli/Audio5.png, supportText: "", audio: "audio/5.mp3" },
+      { id: 19, image: "stimuli/Audio6.png, supportText: "", audio: "audio/6.mp3" },
   };
 
   const scenarios = scenariosByBlock[block] || scenariosByBlock["1"];
@@ -272,6 +281,7 @@
   const instruction = document.getElementById("instruction");
   const errorMessage = document.getElementById("errorMessage");
   const supportBox = document.getElementById("supportBox");
+  const supportAudio = document.getElementById("supportAudio");
 
   function preloadNextImage() {
     const nextScenario = scenarios[currentIndex + 1];
@@ -302,6 +312,20 @@
     } else {
       supportBox.textContent = "";
       supportBox.style.display = "none";
+    }
+
+    if (scenario.audio && scenario.audio.trim() !== "") {
+      supportAudio.pause();
+      supportAudio.currentTime = 0;
+      supportAudio.src = scenario.audio;
+
+      supportAudio.play().catch((error) => {
+      console.warn("Audio konnte nicht automatisch abgespielt werden:", error);
+      });
+    } else {
+      supportAudio.pause();
+      supportAudio.currentTime = 0;
+      supportAudio.removeAttribute("src");
     }
 
     stimulusImage.onload = () => {
