@@ -263,6 +263,16 @@
       { id: 18, image: "stimuli/Audio5.png", supportText: "", audio: "audio/5.mp3" },
       { id: 19, image: "stimuli/Audio6.png", supportText: "", audio: "audio/6.mp3" },
     ],
+    "4": [
+      {id: 20, image: "stimuli/Vorschlag1.png", supportText: ""},
+      {id: 21, image: "stimuli/Vorschlag2.png", supportText: ""},
+      {id: 22, image: "stimuli/Vorschlag3.png", supportText: ""},
+      {id: 23, image: "stimuli/Vorschlag4.png", supportText: ""},
+      {id: 24, image: "stimuli/Vorschlag5.png", supportText: ""},
+      {id: 25, image: "stimuli/Vorschlag6.png", supportText: ""},
+      {id: 26, image: "stimuli/Vorschlag7.png", supportText: ""},
+      {id: 27, image: "stimuli/Vorschlag8.png", supportText: ""},
+    ]
   };
 
   const scenarios = scenariosByBlock[block] || scenariosByBlock["1"];
@@ -407,7 +417,7 @@
       await Promise.allSettled(pendingSaves);
       const nextBlock = Number(block) + 1;
 
-      if (nextBlock <= 3) {
+      if (nextBlock <= 4) {
         window.location.href = `support_intro.html?block=${nextBlock}`;
       } else {
         window.location.href = "feedback.html";
