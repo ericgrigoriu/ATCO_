@@ -58,15 +58,26 @@
       padding: 20px;
       margin-bottom: 24px;
       text-align: center;
+      overflow: hidden;
+      position: relative;
+      cursor: grab;
     }
 
-    .stimulus-box img {
+    .stimulus-box.dragging {
+      cursor: grabbing;
+    }
+
+   .stimulus-box img {
       width: 100%;
       max-width: 1400px;
       height: auto;
       border-radius: 8px;
       border: 1px solid #cbd5e1;
       background: white;
+      transform-origin: center center;
+      transition: transform 0.03s linear;
+      user-select: none;
+      pointer-events: auto;
     }
 
     .question-box h2 {
@@ -280,6 +291,13 @@
   let currentIndex = 0;
   let selectedAnswer = null;
   let startTime = 0;
+  let imageScale = 1;
+  let translateX = 0;
+  let translateY = 0;
+  let isDragging = false;
+  let dragStartX = 0;
+  let dragStartY = 0;
+    
   let results = JSON.parse(sessionStorage.getItem("hint_results")) || [];
   let pendingSaves = [];
 
@@ -293,6 +311,57 @@
   const errorMessage = document.getElementById("errorMessage");
   const supportBox = document.getElementById("supportBox");
   const supportAudio = document.getElementById("supportAudio");
+
+  const stimulusBox = document.querySelector(".stimulus-box");
+
+  function updateImageTransform() {
+    stimulusImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${imageScale})`;
+  }
+
+  stimulusImage.addEventListener("wheel", (event) => {
+    event.preventDefault();
+
+    const zoomStep = 0.1;
+
+    if (event.deltaY < 0) {
+      imageScale += zoomStep;
+    } else {
+      imageScale -= zoomStep;
+    }
+
+    imageScale = Math.min(Math.max(imageScale, 1), 4);
+
+    if (imageScale === 1) {
+      translateX = 0;
+      translateY = 0;
+    }
+
+    updateImageTransform();
+  });
+
+  stimulusImage.addEventListener("mousedown", (event) => {
+    if (imageScale <= 1) return;
+
+    isDragging = true;
+    dragStartX = event.clientX - translateX;
+    dragStartY = event.clientY - translateY;
+
+    stimulusBox.classList.add("dragging");
+  });
+
+  document.addEventListener("mousemove", (event) => {
+    if (!isDragging) return;
+
+    translateX = event.clientX - dragStartX;
+    translateY = event.clientY - dragStartY;
+
+    updateImageTransform();
+  });
+
+  document.addEventListener("mouseup", () => {
+    isDragging = false;
+    stimulusBox.classList.remove("dragging");
+  });
 
   function preloadNextImage() {
     const nextScenario = scenarios[currentIndex + 1];
@@ -345,6 +414,11 @@
       startTime = performance.now();
     };
 
+    imageScale = 1;
+    translateX = 0;
+    translateY = 0;
+    updateImageTransform();
+    
     stimulusImage.src = scenario.image;
     preloadNextImage();
   }
