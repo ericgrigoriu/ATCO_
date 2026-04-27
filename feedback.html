@@ -156,7 +156,7 @@
     ];
 
     const feedbackQuestions = [
-      { key: "sinnvoll", label: "Die Unterstützung war sinnvoll." },
+      { key: "sinnvoll", label: "Die Art der Unterstützung war sinnvoll." },
       { key: "verstaendlich", label: "Die Unterstützung war eindeutig verständlich." },
       { key: "vertrauen_sicherheit", label: "Ich habe der Unterstützung vertraut und mich im Umgang sicher gefühlt." },
       { key: "konflikterkennung", label: "Die Unterstützung half mir, potenzielle Konflikte zu erkennen." },
@@ -165,6 +165,17 @@
       { key: "konsequenzen", label: "Die Konsequenzen der vorgeschlagenen Handlung wurden gut verdeutlicht." },
       { key: "ablenkung", label: "Die Unterstützung hat mich vom eigentlichen Lagebild abgelenkt." },
     ];
+
+    const feedbackQuestionsWithoutSupport = [
+      { key: "sinnvoll", label: "Die Entscheidungsfindung ohne Unterstützung war möglich." },
+      { key: "verstaendlich", label: "Die vorliegende Situation war eindeutig verständlich." },
+      { key: "vertrauen_sicherheit", label: "Ich habe mich bei der Bearbeitung ohne Unterstützung sicher gefühlt." },
+      { key: "konflikterkennung", label: "Potenzielle Konflikte konnten gut erkannt werden." },
+      { key: "informationen_auffindbar", label: "Relevante Informationen waren schnell auffindbar." },
+      { key: "zukuenftiger_verkehr", label: "Die zukünftige Verkehrssituation war gut einschätzbar." },
+      { key: "konsequenzen", label: "Die Konsequenzen möglicher Handlungen waren ohne Unterstützung gut einschätzbar." },
+      { key: "ablenkung", label: "Die Darstellung hat mich vom eigentlichen Lagebild abgelenkt." }
+];
 
     const feedbackContainer = document.getElementById("feedbackContainer");
 
@@ -177,24 +188,31 @@
     }
 
     function renderFeedbackForm() {
-      feedbackContainer.innerHTML = feedbackItems.map(item => `
-        <div class="feedback-card">
-          <h2>${item.label}</h2>
+      feedbackContainer.innerHTML = feedbackItems.map(item => {
+        const questions =
+          item.key === "without_support"
+            ? feedbackQuestionsWithoutSupport
+            : feedbackQuestions;
 
-          ${feedbackQuestions.map(question => `
-            <div class="form-group">
-              <label for="${question.key}_${item.key}">
-                ${question.label}
-              </label>
-              <select id="${question.key}_${item.key}">
-                ${createRatingOptions()}
-              </select>
-            </div>
-          `).join("")}
-        </div>
-      `).join("");
+        return `
+          <div class="feedback-card">
+            <h2>${item.label}</h2>
+
+            ${questions.map(question => `
+              <div class="form-group">
+                <label for="${question.key}_${item.key}">
+                  ${question.label}
+                </label>
+                <select id="${question.key}_${item.key}">
+                  ${createRatingOptions()}
+                </select>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }).join("");
     }
-
+    
     async function submitFeedback() {
       const errorMessage = document.getElementById("errorMessage");
       errorMessage.style.display = "none";
@@ -204,7 +222,12 @@
       const collectedItems = feedbackItems.map(item => {
         const ratings = {};
 
-        feedbackQuestions.forEach(question => {
+        const questions =
+          item.key === "without_support"
+            ? feedbackQuestionsWithoutSupport
+            : feedbackQuestions;
+
+        questions.forEach(question => {
           ratings[question.key] = document.getElementById(`${question.key}_${item.key}`).value;
         });
 
@@ -216,7 +239,12 @@
       });
 
       const missingRating = collectedItems.some(item => {
-        return feedbackQuestions.some(question => item.ratings[question.key] === "");
+        const questions =
+          item.key === "without_support"
+          ? feedbackQuestionsWithoutSupport
+          : feedbackQuestions;
+
+        return questions.some(question => item.ratings[question.key] === "");
       });
 
       if (missingRating) {
