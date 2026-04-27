@@ -111,15 +111,28 @@
       color: #991b1b;
       border: 1px solid #fecaca;
     }
+
+    .info-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e3a8a;
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Abschließendes Feedback</h1>
     <p class="subtitle">
-      Bitte bewerten Sie die einzelnen Verfahren bzw. Unterstützungsformen jeweils auf einer Skala von 0 bis 10
-      und geben Sie optional einen kurzen Kommentar dazu an.
+      Bitte bewerten Sie die einzelnen Verfahren bzw. Unterstützungsformen jeweils auf einer Skala bis 7.
+      Je höher die Zahl, desto höher ist die Zustimmung.
     </p>
+    <div class="info-box">
+      7 = "Stimme voll zu", 1 = "Stimme überhaupt nicht zu."
+    </div>
 
     <div id="feedbackContainer"></div>
 
@@ -142,11 +155,22 @@
       { key: "support_4", label: "Systemvorschlag" },
     ];
 
+    const feedbackQuestions = [
+      { key: "useful", label: "Die Unterstützung war sinnvoll." },
+      { key: "understandable", label: "Die Unterstützung war eindeutig verständlich." },
+      { key: "trust", label: "Ich habe der Unterstützung vertraut und mich im Umgang sicher gefühlt." },
+      { key: "conflict_detection", label: "Die Unterstützung half mir, potenzielle Konflikte zu erkennen." },
+      { key: "information_access", label: "Relevante Informationen waren schnell auffindbar." },
+      { key: "future_traffic", label: "Die zukünftige Verkehrssituation wurde gut verdeutlicht." },
+      { key: "consequences", label: "Die Konsequenzen der vorgeschlagenen Handlung wurden gut verdeutlicht." }
+      { key: "safe", label: "Die Unterstützung hat mich vom eigentlichen Lagebild abgelenkt." },
+    ];
+
     const feedbackContainer = document.getElementById("feedbackContainer");
 
     function createRatingOptions() {
       let options = '<option value="">Bitte auswählen</option>';
-      for (let i = 0; i <= 10; i++) {
+      for (let i = 1; i <= 7; i++) {
         options += `<option value="${i}">${i}</option>`;
       }
       return options;
@@ -157,24 +181,16 @@
         <div class="feedback-card">
           <h2>${item.label}</h2>
 
-          <div class="form-group">
-            <label for="rating_${item.key}">
-              Bewertung (0 = sehr schlecht / 10 = sehr gut)
-            </label>
-            <select id="rating_${item.key}">
-              ${createRatingOptions()}
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="comment_${item.key}">
-              Freitext / Eindruck
-            </label>
-            <textarea
-              id="comment_${item.key}"
-              placeholder="Optional"
-            ></textarea>
-          </div>
+          ${feedbackQuestions.map(question => `
+            <div class="form-group">
+              <label for="${question.key}_${item.key}">
+                ${question.label}
+              </label>
+              <select id="${question.key}_${item.key}">
+                ${createRatingOptions()}
+              </select>
+            </div>
+          `).join("")}
         </div>
       `).join("");
     }
@@ -186,21 +202,25 @@
       const sessionId = sessionStorage.getItem("session_id");
 
       const collectedItems = feedbackItems.map(item => {
-        const rating = document.getElementById(`rating_${item.key}`).value;
-        const comment = document.getElementById(`comment_${item.key}`).value.trim();
+        const ratings = {};
+
+        feedbackQuestions.forEach(question => {
+          ratings[question.key] = document.getElementById(`${question.key}_${item.key}`).value;
+        });
 
         return {
           key: item.key,
           label: item.label,
-          rating: rating,
-          comment: comment
+          ratings: ratings
         };
       });
 
-      const missingRating = collectedItems.some(item => item.rating === "");
+      const missingRating = collectedItems.some(item => {
+        return feedbackQuestions.some(question => item.ratings[question.key] === "");
+      });
 
       if (missingRating) {
-        errorMessage.textContent = "Bitte geben Sie für jeden Block eine Bewertung an.";
+        errorMessage.textContent = "Bitte beantworten Sie alle Bewertungsfelder.";
         errorMessage.style.display = "block";
         return;
       }
