@@ -122,43 +122,41 @@
       line-height: 1.5;
     }
 
-    .feedback-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 18px;
-      margin-bottom: 16px;
-    }
+    
 
-    .feedback-card-title {
-      flex: 1;
+    .feedback-card-header {
+      margin-bottom: 16px;
     }
 
     .feedback-card-title h2 {
       margin-top: 0;
-      margin-bottom: 6px;
+      margin-bottom: 12px;
     }
 
     .feedback-preview {
-      width: 180px;
-      max-width: 30%;
+      display: block;
+      width: 100%;
+      max-width: 850px;
+      max-height: 420px;
+      margin: 12px auto 24px auto;
       border: 1px solid #cbd5e1;
-      border-radius: 8px;
+      border-radius: 10px;
       background: white;
       object-fit: contain;
     }
 
     .feedback-preview-box {
-      width: 260px;
-      max-width: 38%;
+      width: 100%;
+      max-width: 850px;
       background: #fef3c7;
       border: 1px solid #fcd34d;
       color: #92400e;
-      padding: 12px 14px;
+      padding: 14px 16px;
       border-radius: 10px;
-      line-height: 1.4;
-      font-size: 0.9rem;
+      line-height: 1.5;
+      font-size: 1rem;
       font-weight: 600;
+      margin: 12px 0 24px 0;
     }
 
     @media (max-width: 700px) {
@@ -287,15 +285,16 @@
         }
 
         return `
-          <div class="feedback-card">
-            <div class="feedback-card-header">
-              <div class="feedback-card-title">
-                <h2>${item.label}</h2>
-              </div>
-              ${previewHtml}
-            </div>
-
-            ${questions.map(question => `
+      <div class="feedback-card">
+        <div class="feedback-card-header">
+          <div class="feedback-card-title">
+            <h2>${item.label}</h2>
+          </div>
+        </div>
+    
+        ${previewHtml}
+    
+        ${questions.map(question => `
               <div class="form-group">
                 <label for="${question.key}_${item.key}">
                   ${question.label}
