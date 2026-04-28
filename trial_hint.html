@@ -442,16 +442,22 @@
 
   btnConflict.addEventListener("click", () => {
     selectedAnswer = "conflict";
+
     btnConflict.classList.add("active");
     btnNoConflict.classList.remove("active");
+    btnAcceptProposal.classList.remove("active");
+
     detailsBox.style.display = "block";
     errorMessage.style.display = "none";
   });
 
   btnNoConflict.addEventListener("click", () => {
     selectedAnswer = "no_conflict";
+
     btnNoConflict.classList.add("active");
     btnConflict.classList.remove("active");
+    btnAcceptProposal.classList.remove("active");
+
     detailsBox.style.display = "none";
     callsign.value = "";
     instruction.value = "";
