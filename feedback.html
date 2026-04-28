@@ -121,6 +121,57 @@
       margin-bottom: 24px;
       line-height: 1.5;
     }
+
+    .feedback-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 16px;
+    }
+
+    .feedback-card-title {
+      flex: 1;
+    }
+
+    .feedback-card-title h2 {
+      margin-top: 0;
+      margin-bottom: 6px;
+    }
+
+    .feedback-preview {
+      width: 180px;
+      max-width: 30%;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: white;
+      object-fit: contain;
+    }
+
+    .feedback-preview-box {
+      width: 260px;
+      max-width: 38%;
+      background: #fef3c7;
+      border: 1px solid #fcd34d;
+      color: #92400e;
+      padding: 12px 14px;
+      border-radius: 10px;
+      line-height: 1.4;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    @media (max-width: 700px) {
+      .feedback-card-header {
+        flex-direction: column;
+      }
+
+      .feedback-preview,
+      .feedback-preview-box {
+        width: 100%;
+        max-width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -148,11 +199,32 @@
   <script src="api.js"></script>
   <script>
     const feedbackItems = [
-      { key: "without_support", label: "Ohne Unterstützung" },
-      { key: "support_1", label: "Fehlermeldung per Text" },
-      { key: "support_2", label: "Markierung der Luftfahrzeuge" },
-      { key: "support_3", label: "Akustisches Signal" },
-      { key: "support_4", label: "Systemvorschlag" },
+      {
+        key: "without_support",
+        label: "Ohne Unterstützung"
+      },
+      {
+        key: "support_1",
+        label: "Fehlermeldung per Text",
+        previewType: "text",
+        previewText: "Flight LOT403 could not be assigned a FL near 260, blocked by EWG10M FL260."
+      },
+      {
+        key: "support_2",
+        label: "Markierung der Luftfahrzeuge",
+        previewType: "image",
+        previewImage: "stimuli/Farbe1.png"
+      },
+      {
+        key: "support_3",
+        label: "Akustisches Signal"
+      },
+      {
+        key: "support_4",
+        label: "Systemvorschlag",
+        previewType: "image",
+        previewImage: "stimuli/Vorschlag2.png"
+      }
     ];
 
     const feedbackQuestions = [
@@ -194,9 +266,34 @@
             ? feedbackQuestionsWithoutSupport
             : feedbackQuestions;
 
+        let previewHtml = "";
+
+        if (item.previewType === "image" && item.previewImage) {
+          previewHtml = `
+            <img
+              class="feedback-preview"
+              src="${item.previewImage}"
+              alt="Beispielbild ${item.label}"
+            >
+          `;
+        }
+
+        if (item.previewType === "text" && item.previewText) {
+          previewHtml = `
+            <div class="feedback-preview-box">
+              ${item.previewText}
+            </div>
+          `;
+        }
+
         return `
           <div class="feedback-card">
-            <h2>${item.label}</h2>
+            <div class="feedback-card-header">
+              <div class="feedback-card-title">
+                <h2>${item.label}</h2>
+              </div>
+              ${previewHtml}
+            </div>
 
             ${questions.map(question => `
               <div class="form-group">
