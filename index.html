@@ -141,17 +141,24 @@
         </select>
       </div>
 
-      <div class="form-group">
-        <label for="experience">Erfahrung im Bereich / im Umgang mit ATC & ATM</label>
-        <p class="subtitle">Bitte schätzen Sie sich grob ein. Dies dient der Auswertung der Ergebnisse.</p>
-        <select id="experience" name="experience" required>
-          <option value="">Bitte auswählen</option>
-          <option value="Keine">Keine Erfahrung</option>
-          <option value="Gering">Geringe Erfahrung</option>
-          <option value="Mittel">Mittlere Erfahrung</option>
-          <option value="Hoch">Hohe Erfahrung</option>
-        </select>
-      </div>
+      <label for="isController">Sind Sie ausgebildete/r Fluglotse/in?</label>
+      <select id="isController">
+        <option value="">Bitte auswählen</option>
+        <option value="yes">Ja</option>
+        <option value="no">Nein</option>
+        <option value="in_training">In Ausbildung / Training</option>
+      </select>
+      
+      <label for="atcDuration" style="margin-top: 18px;">Wie lange beschäftigen Sie sich bereits mit ATC/ATM bzw. Flugverkehrsführung?</label>
+      <select id="atcDuration">
+        <option value="">Bitte auswählen</option>
+        <option value="none">Gar nicht / erstmalig</option>
+        <option value="less_1_year">Weniger als 1 Jahr </option>
+        <option value="1_2_years">1 bis 2 Jahre</option>
+        <option value="3_5_years">3 bis 5 Jahre</option>
+        <option value="6_10_years">6 bis 10 Jahre</option>
+        <option value="more_10_years">Mehr als 10 Jahre</option>
+      </select>
 
       <div id="errorMessage" class="error">
         Bitte fülle beide Felder aus.
@@ -171,11 +178,12 @@
   const errorMessage = document.getElementById("errorMessage");
 
   startButton.addEventListener("click", async function () {
-    const age = document.getElementById("age").value.trim();
-    const experience = document.getElementById("experience").value;
+    const age = document.getElementById("age").value;
+    const isController = document.getElementById("isController").value;
+    const atcDuration = document.getElementById("atcDuration").value;
 
-    if (!age || !experience) {
-      errorMessage.textContent = "Bitte fülle beide Felder aus.";
+    if (!age || !isController || !atcDuration) {
+      errorMessage.textContent = "Bitte füllen Sie alle Felder aus.";
       errorMessage.style.display = "block";
       return;
     }
@@ -188,12 +196,14 @@
   await startSession({
     session_id: sessionId,
     age: age,
-    atc_experience: experience
-  });
+    is_controller: isController,
+    atc_duration: atcDuration
+});
 
   sessionStorage.setItem("session_id", sessionId);
   sessionStorage.setItem("participant_age", age);
-  sessionStorage.setItem("participant_atc_experience", experience);
+  sessionStorage.setItem("participant_is_controller", isController);
+  sessionStorage.setItem("participant_atc_duration", atcDuration);
 
   window.location.href = "instructions.html";
 } catch (error) {
