@@ -207,6 +207,11 @@
         <button type="button" class="choice-btn" id="btnConflict">Konflikt</button>
         <button type="button" class="choice-btn" id="btnNoConflict">Kein Konflikt</button>
       </div>
+      <div class="button-row" id="proposalButtonRow" style="display: none; margin-top: 12px;">
+        <button type="button" class="choice-btn" id="btnAcceptProposal">
+          Vorschlag annehmen
+        </button>
+    </div>
     </div>
 
     <div class="details-box" id="detailsBox">
@@ -313,6 +318,8 @@
   const errorMessage = document.getElementById("errorMessage");
   const supportBox = document.getElementById("supportBox");
   const supportAudio = document.getElementById("supportAudio");
+  const proposalButtonRow = document.getElementById("proposalButtonRow");
+  const btnAcceptProposal = document.getElementById("btnAcceptProposal");
 
   const stimulusBox = document.querySelector(".stimulus-box");
 
@@ -382,6 +389,14 @@
     btnConflict.classList.remove("active");
     btnNoConflict.classList.remove("active");
 
+    btnAcceptProposal.classList.remove("active");
+
+    if (block === "4") {
+      proposalButtonRow.style.display = "flex";
+    } else {
+      proposalButtonRow.style.display = "none";
+    }
+
     detailsBox.style.display = "none";
     callsign.value = "";
     instruction.value = "";
@@ -437,6 +452,19 @@
     selectedAnswer = "no_conflict";
     btnNoConflict.classList.add("active");
     btnConflict.classList.remove("active");
+    detailsBox.style.display = "none";
+    callsign.value = "";
+    instruction.value = "";
+    errorMessage.style.display = "none";
+  });
+
+  btnAcceptProposal.addEventListener("click", () => {
+    selectedAnswer = "proposal_accepted";
+
+    btnAcceptProposal.classList.add("active");
+    btnConflict.classList.remove("active");
+    btnNoConflict.classList.remove("active");
+
     detailsBox.style.display = "none";
     callsign.value = "";
     instruction.value = "";
