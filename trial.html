@@ -427,7 +427,7 @@
 
     const endTime = performance.now();
 
-    of (decisionTimeMs === null) {
+    if (decisionTimeMs === null) {
       dicisionTimeMs = Math.round(endTime - startTime);
     }
 
