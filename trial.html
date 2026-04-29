@@ -371,7 +371,9 @@
       decisionTimeMs = Math.round(performance.now() - startTime);
     }
 
-    inputStartTime = performance.now()
+    if (inputStartTime === null) {
+      inputStartTime = performance.now();
+    }
 
     btnConflict.classList.add("active");
     btnNoConflict.classList.remove("active");
@@ -390,8 +392,6 @@
     if (decisionTimeMs === null) {
       decisionTimeMs = Math.round(performance.now() - startTime);
     }
-  
-    inputStartTime = null;
   
     btnNoConflict.classList.add("active");
     btnConflict.classList.remove("active");
