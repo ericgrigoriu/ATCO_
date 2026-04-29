@@ -307,6 +307,16 @@
           </div>
         `;
       }).join("");
+
+      <div class="form-group">
+        <label for="challenge_${item.key}">
+          Was war für Sie in diesem Bereich die größte Aufgabe oder Herausforderung?
+        </label>
+        <textarea
+          id="challenge_${item.key}"
+          placeholder="Optional"
+        ></textarea>
+      </div>
     }
     
     async function submitFeedback() {
@@ -327,10 +337,13 @@
           ratings[question.key] = document.getElementById(`${question.key}_${item.key}`).value;
         });
 
+        const challenge = document.getElementById(`challenge_${item.key}`).value.trim();
+        
         return {
           key: item.key,
           label: item.label,
-          ratings: ratings
+          ratings: ratings,
+          challenge: challenge
         };
       });
 
