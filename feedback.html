@@ -263,9 +263,9 @@
           item.key === "without_support"
             ? feedbackQuestionsWithoutSupport
             : feedbackQuestions;
-
+    
         let previewHtml = "";
-
+    
         if (item.previewType === "image" && item.previewImage) {
           previewHtml = `
             <img
@@ -275,7 +275,7 @@
             >
           `;
         }
-
+    
         if (item.previewType === "text" && item.previewText) {
           previewHtml = `
             <div class="feedback-preview-box">
@@ -283,18 +283,18 @@
             </div>
           `;
         }
-
+    
         return `
-      <div class="feedback-card">
-        <div class="feedback-card-header">
-          <div class="feedback-card-title">
-            <h2>${item.label}</h2>
-          </div>
-        </div>
+          <div class="feedback-card">
+            <div class="feedback-card-header">
+              <div class="feedback-card-title">
+                <h2>${item.label}</h2>
+              </div>
+            </div>
     
-        ${previewHtml}
+            ${previewHtml}
     
-        ${questions.map(question => `
+            ${questions.map(question => `
               <div class="form-group">
                 <label for="${question.key}_${item.key}">
                   ${question.label}
@@ -304,20 +304,20 @@
                 </select>
               </div>
             `).join("")}
+    
+            <div class="form-group">
+              <label for="challenge_${item.key}">
+                Was war für Sie in diesem Bereich die größte Aufgabe oder Herausforderung?
+              </label>
+              <textarea
+                id="challenge_${item.key}"
+                placeholder="Optional"
+              ></textarea>
+            </div>
           </div>
         `;
       }).join("");
-
-      <div class="form-group">
-        <label for="challenge_${item.key}">
-          Was war für Sie in diesem Bereich die größte Aufgabe oder Herausforderung?
-        </label>
-        <textarea
-          id="challenge_${item.key}"
-          placeholder="Optional"
-        ></textarea>
-      </div>
-    }
+}
     
     async function submitFeedback() {
       const errorMessage = document.getElementById("errorMessage");
