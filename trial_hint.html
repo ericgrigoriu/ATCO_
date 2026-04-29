@@ -298,6 +298,8 @@
   let currentIndex = 0;
   let selectedAnswer = null;
   let startTime = 0;
+  let decisionTimeMs = null;
+  let inputStartTime = null;
   let imageScale = 1;
   let translateX = 0;
   let translateY = 0;
@@ -384,8 +386,10 @@
     const scenario = scenarios[currentIndex];
 
     selectedAnswer = null;
+    decisionTimeMS = null;
+    inputStartTime = null;
     errorMessage.style.display = "none";
-
+    
     btnConflict.classList.remove("active");
     btnNoConflict.classList.remove("active");
 
@@ -440,43 +444,67 @@
     preloadNextImage();
   }
 
-  btnConflict.addEventListener("click", () => {
+   btnConflict.addEventListener("click", () => {
     selectedAnswer = "conflict";
-
+  
+    if (decisionTimeMs === null) {
+      decisionTimeMs = Math.round(performance.now() - startTime);
+    }
+  
+    inputStartTime = performance.now();
+  
     btnConflict.classList.add("active");
     btnNoConflict.classList.remove("active");
-    btnAcceptProposal.classList.remove("active");
-
+  
+    if (typeof btnAcceptProposal !== "undefined" && btnAcceptProposal) {
+      btnAcceptProposal.classList.remove("active");
+    }
+  
     detailsBox.style.display = "block";
     errorMessage.style.display = "none";
   });
-
+    
   btnNoConflict.addEventListener("click", () => {
     selectedAnswer = "no_conflict";
-
+  
+    if (decisionTimeMs === null) {
+      decisionTimeMs = Math.round(performance.now() - startTime);
+    }
+  
+    inputStartTime = null;
+  
     btnNoConflict.classList.add("active");
     btnConflict.classList.remove("active");
-    btnAcceptProposal.classList.remove("active");
-
+  
+    if (typeof btnAcceptProposal !== "undefined" && btnAcceptProposal) {
+      btnAcceptProposal.classList.remove("active");
+    }
+  
     detailsBox.style.display = "none";
     callsign.value = "";
     instruction.value = "";
     errorMessage.style.display = "none";
   });
-
-  btnAcceptProposal.addEventListener("click", () => {
+  
+   btnAcceptProposal.addEventListener("click", () => {
     selectedAnswer = "proposal_accepted";
-
+  
+    if (decisionTimeMs === null) {
+      decisionTimeMs = Math.round(performance.now() - startTime);
+    }
+  
+    inputStartTime = null;
+  
     btnAcceptProposal.classList.add("active");
     btnConflict.classList.remove("active");
     btnNoConflict.classList.remove("active");
-
+  
     detailsBox.style.display = "none";
     callsign.value = "";
     instruction.value = "";
     errorMessage.style.display = "none";
   });
-
+    
   async function submitTrial() {
     const scenario = scenarios[currentIndex];
 
@@ -497,8 +525,19 @@
     }
 
     const endTime = performance.now();
-    const reactionTime = Math.round(endTime - startTime);
+
+    if (decisionTimeMs === null) {
+      decisionTimeMs = Math.round(endTime - startTime);
+    }
+    
+    const inputTimeMs =
+      selectedAnswer === "conflict" && inputStartTime !== null
+        ? Math.round(endTime - inputStartTime)
+        : "";
+    
     const sessionId = sessionStorage.getItem("session_id");
+
+    const totalTimeMs = Math.round(endTime - startTime);
 
     const trialResult = {
       session_id: sessionId,
@@ -507,7 +546,9 @@
       answer: selectedAnswer,
       callsign: selectedAnswer === "conflict" ? callsign.value.trim() : "",
       instruction: selectedAnswer === "conflict" ? instruction.value : "",
-      reaction_time_ms: reactionTime
+      decision_time_ms: decisionTimeMs,
+      input_time_ms: inputTimeMs,
+      total_time_ms: totalTimeMs
     };
 
     results.push(trialResult);
