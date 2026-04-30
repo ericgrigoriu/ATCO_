@@ -163,6 +163,14 @@
     document.getElementById("supportDescription").textContent = current.supportDescription;
     document.getElementById("outroText").textContent = current.outroText;
 
+    const audioInfoBox = document.getElementById("audioInfoBox");
+
+    if (block === "3") {
+      audioInfoBox.style.display = "block";
+    } else {
+      audioInfoBox.style.display = "none";
+    }
+
     function goNext() {
       window.location.href = `trial_hint.html?block=${block}`;
     }
