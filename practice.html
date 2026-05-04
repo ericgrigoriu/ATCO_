@@ -266,6 +266,17 @@
       background: #93cffd;
       border-color: #60a5fa;
     }
+
+    .zoom-container {
+      overflow: hidden;
+      position: relative;
+      cursor: grab;
+    }
+    
+    .zoom-container img {
+      transition: transform 0.1s ease;
+      transform-origin: center center;
+    }
     
   </style>
 </head>
@@ -323,7 +334,9 @@
     </div>
     
     <div class="stimulus-box">
-      <img src="stimuli/uebung1.png" alt="Übungsszene ATC" />
+      <div class="zoom-container" id="zoomContainer">
+        <img id="zoomImage" src="stimuli/uebung1.png" alt="Übungsszene ATC" />
+      </div>
     </div>
 
     <div class="question-box">
@@ -434,6 +447,59 @@
 
     function goBack() {
       window.location.href = "instructions.html";
+    }
+
+    const img = document.getElementById("zoomImage");
+    const container = document.getElementById("zoomContainer");
+    
+    let scale = 1;
+    let pos = { x: 0, y: 0 };
+    let isDragging = false;
+    let start = { x: 0, y: 0 };
+    
+    // Zoom mit Mausrad
+    container.addEventListener("wheel", (e) => {
+      e.preventDefault();
+    
+      const zoomSpeed = 0.1;
+    
+      if (e.deltaY < 0) {
+        scale += zoomSpeed;
+      } else {
+        scale -= zoomSpeed;
+      }
+    
+      scale = Math.min(Math.max(1, scale), 5); // 1x bis 5x
+    
+      updateTransform();
+    });
+    
+    // Drag starten
+    container.addEventListener("mousedown", (e) => {
+      isDragging = true;
+      start.x = e.clientX - pos.x;
+      start.y = e.clientY - pos.y;
+      container.style.cursor = "grabbing";
+    });
+    
+    // Drag bewegen
+    window.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+    
+      pos.x = e.clientX - start.x;
+      pos.y = e.clientY - start.y;
+    
+      updateTransform();
+    });
+    
+    // Drag beenden
+    window.addEventListener("mouseup", () => {
+      isDragging = false;
+      container.style.cursor = "grab";
+    });
+    
+    function updateTransform() {
+      img.style.transform = `translate(${pos.x}px, ${pos.y}px) scale(${scale})`;
     }
   </script>
 </body>
